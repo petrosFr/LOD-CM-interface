@@ -5,35 +5,29 @@ function getUserIP()
 {
     // Get real visitor IP behind CloudFlare network
     if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-              $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-              $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
     }
-    $client  = @$_SERVER['HTTP_CLIENT_IP'];
+    $client = @$_SERVER['HTTP_CLIENT_IP'];
     $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-    $remote  = $_SERVER['REMOTE_ADDR'];
+    $remote = $_SERVER['REMOTE_ADDR'];
 
-    if(filter_var($client, FILTER_VALIDATE_IP))
-    {
+    if (filter_var($client, FILTER_VALIDATE_IP)) {
         $ip = $client;
-    }
-    elseif(filter_var($forward, FILTER_VALIDATE_IP))
-    {
+    } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
         $ip = $forward;
-    }
-    else
-    {
+    } else {
         $ip = $remote;
     }
 
     return $ip;
 }
 
-
 $user_ip = getUserIP();
 
 ?>
 <html>
-<head> 
+<head>
 <title>Conceptual Model </title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
@@ -42,7 +36,7 @@ $user_ip = getUserIP();
 }
 
 body {
-  font: 16px Arial;  
+  font: 16px Arial;
 }
 
 .autocomplete {
@@ -84,19 +78,19 @@ input[type=submit] {
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
-  background-color: #fff; 
-  border-bottom: 1px solid #d4d4d4; 
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
 }
 
 .autocomplete-items div:hover {
   /*when hovering an item:*/
-  background-color: #e9e9e9; 
+  background-color: #e9e9e9;
 }
 
 .autocomplete-active {
   /*when navigating through the items using the arrow keys:*/
-  background-color: DodgerBlue !important; 
-  color: #ffffff; 
+  background-color: DodgerBlue !important;
+  color: #ffffff;
 }
 </style>
 </head>
@@ -107,7 +101,7 @@ input[type=submit] {
 
 <h1>Linked Open Data - Conceptual Model</h1>
 
-<ul style="color:red;"> <?php 
+<ul style="color:red;"> <?php
 if (isset($error)) {
     echo $error;
 }
@@ -116,18 +110,19 @@ if (isset($error)) {
 
 <?PHP
 $date = date('m/d/Y h:i:s a', time());
-$txt = getUserIP()." - ".$date;
- $myfile = file_put_contents('logs.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
- ?>
+$txt = getUserIP() . " - " . $date;
+$myfile = file_put_contents('logs.txt', $txt . PHP_EOL, FILE_APPEND | LOCK_EX);
+?>
 
 
 <form  autocomplete="off" action="page2.php" method="post">
 <div class="autocomplete" style="width:300px;">
-<select>
-<option value="DBpedia">DBpedia</option>
+<select name="db">
+  <option value="DBpedia">DBpedia</option>
+  <option value="Wikidata">Wikidata</option>
 </select> <br> <br>
 <input id="myInput" type="text"  name="classname" placeholder="Class Name"> <br> <br>
-  <input type="text" name="threshold" pattern="^[1-9][0-9]?$|^100$" placeholder="Threshold (%)" >  <br>
+  <input type="text" name="threshold" required pattern="^[1-9][0-9]?$|^100$" placeholder="Threshold (%)" >  <br>
 </div>
 <input type="submit">
 <input type="reset">
@@ -239,4 +234,4 @@ autocomplete(document.getElementById("myInput"), countries);
 </script>
 
 </body>
-</html> 
+</html>
