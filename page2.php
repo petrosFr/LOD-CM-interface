@@ -30,11 +30,11 @@ $(document).ready(function(){
         var myVariable2 = <?php echo(json_encode($_POST["threshold"])); ?>;
         var myVariable3 = <?php echo(json_encode($_POST["db"])); ?>;
         $('.ge-list').hide();
-        $('#div1').load("script.php", {'classname': myVariable ,'threshold': myVariable2}, function(){
+        $('#div1').load("script.php", {'classname': myVariable ,'threshold': myVariable2, 'db': myVariable3}, function(){
                     $("#testimg").hide();
                     $('.ge-list').show();
                     var classNames;
-    $.getJSON('pictures_uml/JSONclasses_'+myVariable+'_'+myVariable2+'_'+myVariable3+'.json', function(json) {
+    $.getJSON('pictures_uml/JSONclasses_'+myVariable+'_'+myVariable2+'.json', function(json) {
       for (var i = 0; i < json.length; i++) {
         $(".class-lists").append("<div class='checkbox'> <label><input name='deletedclasses[]' type='checkbox' value='" + json[i] + "' checked>" + json[i] + "</label></div>");
       }
