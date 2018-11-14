@@ -9,10 +9,10 @@ if (file_exists($pngname)){
     //echo $pngname;
     //echo '<img src="pictures_uml/CModel_Film_60.png" alt="Model" />';
 } else {
-    $launchphrase = "/usr/lib64/jvm/java-1.8.0-openjdk-1.8.0/jre/bin/java -jar /etudiants/deptinfo/p/pari_p1/workspace/linked_itemset_sub16/lod-cmOK.jar ".$classe." ".$seuil. " ".$db ;
+    $launchphrase = "/usr/lib64/jvm/java-1.8.0-openjdk-1.8.0/jre/bin/java -jar /etudiants/deptinfo/p/pari_p1/workspace/linked_itemset_sub16/lod-cmOK3.jar ".$classe." ".$seuil. " ".$db ;
     //echo $launchphrase;
     //VERSION POUR CACHER ERREURS
-    //$output = shell_exec($launchphrase);
+    $output = shell_exec($launchphrase);
     
     //VERSION POUR DEBUGGER
     $output = shell_exec($launchphrase." 2>&1");

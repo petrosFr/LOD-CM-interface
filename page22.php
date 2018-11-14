@@ -26,15 +26,14 @@
 <script>
 $(document).ready(function(){
         var firstTime = true;
-        var onlyLong;
         var myVariable = <?php echo(json_encode($_POST["classname"])); ?>;
         var myVariable2 = <?php echo(json_encode($_POST["threshold"])); ?>;
+        var myVariable3 = <?php echo(json_encode($_POST["db"])); ?>;
         $('.ge-list').hide();
-        $('#div1').load("script.php", {'classname': myVariable ,'threshold': myVariable2}, function(){
+        $('#div1').load("script.php", {'classname': myVariable ,'threshold': myVariable2, 'db': myVariable3}, function(){
                     $("#testimg").hide();
                     $('.ge-list').show();
                     var classNames;
-                    var propNames;
     $.getJSON('pictures_uml/JSONclasses_'+myVariable+'_'+myVariable2+'.json', function(json) {
       for (var i = 0; i < json.length; i++) {
         $(".class-lists").append("<div class='checkbox'> <label><input name='deletedclasses[]' type='checkbox' value='" + json[i] + "' checked>" + json[i] + "</label></div>");
@@ -43,81 +42,6 @@ $(document).ready(function(){
         $("#b-class-lists").append("<option value='"+json[i]+"'>"+json[i]+"</option>");
       }
       });
-$.getJSON('pictures_uml/JSONproperties_'+myVariable+'_'+myVariable2+'.json', function(json) {
-          for (var i = 0; i < json.length; i++) {
-         $("#properties-lists").append("<div class='checkbox testProp'> <label><input  name='propclasses[]' type='checkbox' value='" + json[i] + "'>" + json[i] + "</label></div>");
-        }
-        }).then(function() {
-
-         $('.testProp input[type="checkbox"]').change(function(){
-      //testProp('/lod-cm/etudiants/deptinfo/p/pari_p1/workspace/linked_itemset_sub16/itemsets/dbpedia/2016-10/'+myVariable+'/schemas/schema_minsupElements'+myVariable2+'.txt');
-      testProp('/lod-cm/pictures_uml/schemas/schema_minsupElements'+myVariable2+'.txt');
-             //         $('.testProp input[type="checkbox"]').attr('disabled','true');
-        var val = $(this).val(); // this gives me null
-  if (val != null) {
-  disPro('/lod-cm/pictures_uml/schemas/schema_minsupElements'+myVariable2+'.txt',val);
-  console.log(val);
-  }
-
-     });
-});
-        function disPro(file,val){
-        var rawFile = new XMLHttpRequest();
-        var allProp;
-        var longest;
-        var lgth = 0;
-        rawFile.open("GET", file, false);
-        rawFile.onreadystatechange = function() {
-          if (rawFile.readyState === 4) {
-            if (rawFile.status === 200 || rawFile.status == 0) {
-              var allText = rawFile.responseText;
-              var lines = allText.split('\n');
-              var all='';
-              var chLine=[];
-              for(var y = 0; y < lines.length; y++) {
-                var n = lines[y].search(val);
-                if(n!=-1) {
-                  all = all+lines[y];
-                  chLine.push(lines[y]);
-                }
-              }
-  var longest = chLine.reduce(function (a, b) { return a.length > b.length ? a : b; });
-             console.log(longest);
-              onlyLong = longest.split(' ');
-             onlyLong.shift();
-             onlyLong.splice(-1,1);
-             console.log(onlyLong);
-              //console.log(chLine);
-              $('.testProp input[type="checkbox"]').map(function (a) {
-                var t = all.search(this.value);
-                if(t == -1) {
-                $(this).attr("disabled", true);
-              }
-              }).get();
-            }
-          }
-        }
-        rawFile.send(null);
-      }
-
-
-    function testProp(file) {
-       var rawFile = new XMLHttpRequest();
-       rawFile.open("GET", file, false);
-       rawFile.onreadystatechange = function() {
-         if (rawFile.readyState === 4) {
-           if (rawFile.status === 200 || rawFile.status == 0) {
-             var allText = rawFile.responseText;
-             var lines = allText.split('\n');
-             for (var x = 0; x < lines.length; x++) {
-               console.log(lines[x]);
-             }
-           }
-         }
-       }
-       rawFile.send(null);
-     }
-
     function readTextFile(file) {
       var rawFile = new XMLHttpRequest();
       rawFile.open("GET", file, false);
@@ -168,50 +92,6 @@ $.getJSON('pictures_uml/JSONproperties_'+myVariable+'_'+myVariable2+'.json', fun
       }
       rawFile.send(null);
     }
-    function readProp(file) {
-      var rawFile = new XMLHttpRequest();
-      rawFile.open("GET", file, false);
-      rawFile.onreadystatechange = function() {
-        if (rawFile.readyState === 4) {
-          if (rawFile.status === 200 || rawFile.status == 0) {
-            var allText = rawFile.responseText;
-            var lines = allText.split('\n');
-            //console.log("")
-            for (var z = 0; z < lines.length; z++) {
-              for(var y = 0; y < propNames.length; y++)
-              {
-                  tp = lines[z].search(propNames[y]);
-                if(tp != -1){
-                  lines.splice(z,1);
-                  z=z-1;
-                }          }
-            }
-            var newtext = lines.join('\n');
-             $.ajax({
-                 url: 'gen.php',
-                 type: "POST",
-                 dataType:'text',
-                 data: {'data': newtext,'filename':'pictures_uml/CModel_'+myVariable+'_'+myVariable2+'_modWP.txt'},
-                 success: function(data){
-                 $("#testimg").show();
-                   $.ajax({
-                       url: 'script3.php',
-                       type: "POST",
-                       dataType:'text',
-                       data: {'classname':myVariable,'threshold':myVariable2},
-                       success: function(data){
-                        $("#testimg").hide();
-                          $("#div3").html("<img src=pictures_uml/CModel_"+myVariable+"_"+myVariable2+"_modWP.png?timestamp="+new Date().getTime()+">" )
-                       }
-                   });
-                 }
-             });
-          }
-        }
-      }
-      rawFile.send(null);
-    }
-
     $("#getDeletedclass").click(function() {
       var all, checked, notChecked;
       all = $('input[name="deletedclasses[]"]');
@@ -241,50 +121,12 @@ $.getJSON('pictures_uml/JSONproperties_'+myVariable+'_'+myVariable2+'.json', fun
         }
     });
   });
-  
-  
-$("#reset-prop").click(function() {
-      $('input[name="propclasses[]"]').map(function (a) {
-        $(this).prop('checked',false);
-       $(this).removeAttr("disabled");
   });
-    });
   
-  
-  $("#delete-prop").click(function() {
-    $(notCheckedP).map(function (a) {
-      return this.value;
-});
-    var allP, checkedP, notCheckedP;
-    allP = $('input[name="propclasses[]"]');
-    checkedP = allP.filter(":checked");
-    notCheckedP = allP.not(":checked");
-    propNames = $(notCheckedP).map(function (a) {
-      for(var t=0;t<onlyLong.length;t++) {
-        console.log("NOT CHECKED :"+ this.value);
-        console.log("onlyLong :"+ onlyLong[t]);
-
-        yn = false;
-        if(onlyLong[t] == this.value ) {
-        console.log("onlyLong :"+ onlyLong[t]);
-          yn = true;
-        }
-      }
-      if(!yn) {
-        console.log('r :' + this.value);
-        return this.value;
-      }
-
-}).get();
-console.log(propNames);
-readProp('pictures_uml/CModel_'+myVariable+'_'+myVariable2+'.txt');
-  });
-  });
-
     console.log(myVariable2);
       var a = "Threshold = " + myVariable2;
       $("#re-script1").attr('data-original-title', a );
-
+  
 });
 </script>
 </head>
@@ -297,12 +139,12 @@ readProp('pictures_uml/CModel_'+myVariable+'_'+myVariable2+'.txt');
 
     <div class="container home">
 
-
+    
      <div class="col-md-12 topNav">
         <a href="index.php"> <span class="glyphicon glyphicon-circle-arrow-left"></span> Back </a>
       </div>
-
-
+    
+    
     <!-- Example row of columns -->
 
 
@@ -321,9 +163,9 @@ readProp('pictures_uml/CModel_'+myVariable+'_'+myVariable2+'.txt');
         </form>
       </div>
     </div>-->
-
-
-      <div class="col-md-2 ge-list ">
+    
+    
+        <div class="col-md-2 ge-list ">
         <div class="panel panel-success">
           <div class="panel-heading">Related Classes :</div>
           <div class="panel-body">
@@ -335,38 +177,14 @@ readProp('pictures_uml/CModel_'+myVariable+'_'+myVariable2+'.txt');
             </form>
           </div>
         </div>
-
+         
       </div>
-
-
-
-    <div class="row">
-      <div class="col-md-10" id="div3"></div>
-
-
-         <div class="col-md-2 ge-list ">
-        <div class="panel panel-success">
-          <div class="panel-heading">Properties : </div>
-          <div class="panel-body">
-            <form class="" id="c-b">
-            <div id="properties-lists">
-
-
-             </select>
-              </div>
-             <!--<button  id="re-script1" type="button" class="btn btn-success">OK</button>-->
-            <button  id="delete-prop" type="button" class="btn btn-success"><span class="glyphicon glyphicon-zoom-in"></span></button>
-             <button  id="reset-prop" type="button" class="btn btn-success"><span class="glyphicon glyphicon-repeat"></span></button>
-           </form>
-          </div>
-        </div>
-
-      </div>
-    </div>
+    
+    
     <div class="row">
       <div class="col-md-10" id="div2"></div>
-
-
+      
+      
          <div class="col-md-2 ge-list ">
         <div class="panel panel-success">
           <div class="panel-heading">Zoom in</div>
@@ -383,10 +201,10 @@ readProp('pictures_uml/CModel_'+myVariable+'_'+myVariable2+'.txt');
            </form>
           </div>
         </div>
-
+         
       </div>
-
-
+      
+      
      <!-- <div class="col-md-2 ge-list ">
 
          <form class="" id="c-b">
@@ -399,9 +217,10 @@ readProp('pictures_uml/CModel_'+myVariable+'_'+myVariable2+'.txt');
           <button  id="re-script1" type="button" class="btn btn-success">OK</button>
         </form>
       </div>-->
-
-
+      
+      
     </div>
+
   </div>
 
 
@@ -417,9 +236,9 @@ readProp('pictures_uml/CModel_'+myVariable+'_'+myVariable2+'.txt');
   $(document).ready(function(){
       $('[data-toggle="tooltip"]').tooltip();
 
-
+      
   });
   </script>
-
+  
 </body>
 </html>
