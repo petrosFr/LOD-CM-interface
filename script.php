@@ -1,6 +1,7 @@
 <?php
 $classe=$_POST["classname"];
 $seuil=$_POST["threshold"];
+$db=$_POST["db"];
 $pngname = "pictures_uml/CModel_".$classe."_".$seuil.".png";
 $filename = "pictures_uml/CModel_".$classe."_".$seuil.".txt";
 if (file_exists($pngname)){
@@ -8,7 +9,7 @@ if (file_exists($pngname)){
     //echo $pngname;
     //echo '<img src="pictures_uml/CModel_Film_60.png" alt="Model" />';
 } else {
-    $launchphrase = "/usr/lib64/jvm/java-1.8.0-openjdk-1.8.0/jre/bin/java -jar /etudiants/deptinfo/p/pari_p1/workspace/linked_itemset_sub16/lod-cmOK.jar ".$classe." ".$seuil;
+    $launchphrase = "/usr/lib64/jvm/java-1.8.0-openjdk-1.8.0/jre/bin/java -jar /etudiants/deptinfo/p/pari_p1/workspace/linked_itemset_sub16/lod-cmOK.jar ".$classe." ".$seuil. " ".$db ;
     //echo $launchphrase;
     //VERSION POUR CACHER ERREURS
     //$output = shell_exec($launchphrase);
